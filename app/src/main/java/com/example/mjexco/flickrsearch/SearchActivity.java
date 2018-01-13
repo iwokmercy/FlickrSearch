@@ -67,9 +67,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResultsRefined(List<Photo> newList) {
                 //update adapter dataset
-                SearchResultsAdapter adapter = (SearchResultsAdapter) searchResultsList.getAdapter();
-                adapter.setPhotoList(newList);
-                adapter.notifyDataSetChanged();
+                if(!newList.isEmpty()){
+                    SearchResultsAdapter adapter = (SearchResultsAdapter) searchResultsList.getAdapter();
+                    adapter.setPhotoList(newList);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    //no photos in the results match that title
+                    showErrorMessage("No photos match your title search");
+                }
             }
         });
 
@@ -102,9 +107,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /*
-    Show error message in case of unrecoverable error
+    Show generic error message in case of unrecoverable error
      */
     private void showErrorMessage(){
         Toast.makeText(this, "Oops, something went wrong!", Toast.LENGTH_LONG).show();
+    }
+
+    /*
+    Show custom error message in case of unrecoverable error
+     */
+    private void showErrorMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

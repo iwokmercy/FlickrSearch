@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    tools:context="com.example.mjexco.flickrsearch.SearchActivity">
+
+    <TextView
+        android:id="@+id/search_tag_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_tag_text" />
+
+    <EditText
+        android:id="@+id/search_tag"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="@string/enter_search_tag_hint"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:layout_below="@id/search_tag_label" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/search_button_text"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/search_tag" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_button"
+        android:layout_above="@id/refine_results_button" />
+
+    <TextView
+        android:id="@+id/refine_results_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refine_results_text"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

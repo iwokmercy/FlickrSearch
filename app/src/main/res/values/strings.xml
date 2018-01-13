@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Flickr Search</string>
+    <string name="photo_url">https://farm%1$d.staticflickr.com/%2$s/%3$s_%4$s_m.jpg)</string>
+    <string name="search_button_text">Search</string>
+    <string name="enter_search_tag_hint">Enter search tag</string>
+    <string name="search_tag_text">Search Tag</string>
+    <string name="refine_results_text">Refine search results by title or description</string>
+</resources>

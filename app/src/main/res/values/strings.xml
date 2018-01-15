@@ -5,4 +5,11 @@
     <string name="enter_search_tag_hint">Enter search tag</string>
     <string name="search_tag_text">Search Tag</string>
     <string name="refine_results_text">Refine search results by title or description</string>
+    <string name="dialog_title">Refine Results</string>
+    <string name="dialog_message">Enter title or description to refine results by</string>
+    <string name="dialog_button_text">Refine</string>
+    <string name="cancel_dialog_button_text">Cancel</string>
+    <string name="loading_text">Please wait…</string>
+    <string name="no_results_text">No photos match your title search</string>
+    <string name="generic_error_message">Oops, something went wrong!</string>
 </resources>

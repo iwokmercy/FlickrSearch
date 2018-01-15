@@ -1,7 +1,7 @@
 package com.example.mjexco.flickrsearch;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +43,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         searchResultsList.setLayoutManager(layoutManager);
         snapHelper.attachToRecyclerView(searchResultsList);
 
-        searchHelper = new FlickrSearchHelper(new FlickrSearchHelper.FlickrSearchHelperListener() {
+        searchHelper = new FlickrSearchHelper(this, new FlickrSearchHelper.FlickrSearchHelperListener() {
             @Override
             public void onSuccessResponseReceived(FlickrSearchResponse response) {
                 //initialise recycler view adapter with search results
@@ -73,7 +73,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     adapter.notifyDataSetChanged();
                 } else {
                     //no photos in the results match that title
-                    showErrorMessage("No photos match your title search");
+                    showErrorMessage(getString(R.string.no_results_text));
                 }
             }
         });
@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     Show generic error message in case of unrecoverable error
      */
     private void showErrorMessage(){
-        Toast.makeText(this, "Oops, something went wrong!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.generic_error_message, Toast.LENGTH_LONG).show();
     }
 
     /*

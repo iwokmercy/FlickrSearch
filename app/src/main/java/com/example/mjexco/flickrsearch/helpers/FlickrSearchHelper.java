@@ -1,6 +1,8 @@
 package com.example.mjexco.flickrsearch.helpers;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -13,11 +15,11 @@ import com.example.mjexco.flickrsearch.R;
 import com.example.mjexco.flickrsearch.backend.HttpClient;
 import com.example.mjexco.flickrsearch.models.FlickrSearchResponse;
 import com.example.mjexco.flickrsearch.models.Photo;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.google.gson.Gson;
-import com.loopj.android.http.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -36,10 +38,16 @@ public class FlickrSearchHelper {
         void onResultsRefined(List<Photo> newList);
     }
 
+    private ProgressDialog progressBar;
+
     private FlickrSearchHelperListener searchHelperListener;
 
-    public FlickrSearchHelper(@NonNull FlickrSearchHelperListener listener){
+    public FlickrSearchHelper(@NonNull Context context, @NonNull FlickrSearchHelperListener listener){
         searchHelperListener = listener;
+        progressBar = new ProgressDialog(context);
+        progressBar.setIndeterminate(true);
+        progressBar.setCancelable(false);
+        progressBar.setMessage(context.getString(R.string.loading_text));
     }
 
     /**
@@ -47,6 +55,7 @@ public class FlickrSearchHelper {
      * @param tag search tag
      */
     public void getImageResults(String tag){
+        showProgressBar(true);
         HttpClient.get("rest/", getRequestParams(tag), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -61,12 +70,14 @@ public class FlickrSearchHelper {
                 } else {
                     searchHelperListener.onSuccessResponseReceived(jsonResponse);
                 }
+                showProgressBar(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.d("SERVICE FAILURE", error.getMessage());
                 searchHelperListener.onErrorResponseReceived(error.getMessage());
+                showProgressBar(false);
             }
         });
 
@@ -102,14 +113,14 @@ public class FlickrSearchHelper {
 
         final EditText text = dialogView.findViewById(R.id.title_text);
 
-        dialogBuilder.setTitle("Refine Results");
-        dialogBuilder.setMessage("Enter title or description to refine results by");
-        dialogBuilder.setPositiveButton("Refine", new DialogInterface.OnClickListener() {
+        dialogBuilder.setTitle(R.string.dialog_title);
+        dialogBuilder.setMessage(R.string.dialog_message);
+        dialogBuilder.setPositiveButton(R.string.dialog_button_text, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 refineResults(photoList, text.getText().toString());
             }
         });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialogBuilder.setNegativeButton(R.string.cancel_dialog_button_text, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //pass
             }
@@ -131,5 +142,13 @@ public class FlickrSearchHelper {
             }
         }
         searchHelperListener.onResultsRefined(newPhotoList);
+    }
+
+    private void showProgressBar(boolean show){
+        if(show){
+            progressBar.show();
+        } else {
+            progressBar.dismiss();
+        }
     }
 }

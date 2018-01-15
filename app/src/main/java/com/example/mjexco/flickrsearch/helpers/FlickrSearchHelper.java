@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.mjexco.flickrsearch.R;
 import com.example.mjexco.flickrsearch.backend.HttpClient;
@@ -39,11 +40,13 @@ public class FlickrSearchHelper {
     }
 
     private ProgressDialog progressBar;
+    private Context context;
 
     private FlickrSearchHelperListener searchHelperListener;
 
     public FlickrSearchHelper(@NonNull Context context, @NonNull FlickrSearchHelperListener listener){
         searchHelperListener = listener;
+        this.context = context;
         progressBar = new ProgressDialog(context);
         progressBar.setIndeterminate(true);
         progressBar.setCancelable(false);
@@ -66,8 +69,10 @@ public class FlickrSearchHelper {
                 Gson gson = new Gson();
                 FlickrSearchResponse jsonResponse = gson.fromJson(response, FlickrSearchResponse.class);
                 if(jsonResponse.getStat().equals("fail")){
+                    //api returned an error
                     searchHelperListener.onErrorResponseReceived(jsonResponse.getMessage());
                 } else {
+                    //api returned data
                     searchHelperListener.onSuccessResponseReceived(jsonResponse);
                 }
                 showProgressBar(false);
@@ -144,11 +149,29 @@ public class FlickrSearchHelper {
         searchHelperListener.onResultsRefined(newPhotoList);
     }
 
+    /**
+     * Shows or dismisses an indeterminate progress bar shown when data is loading
+     * @param show true to show, false to dismiss
+     */
     private void showProgressBar(boolean show){
         if(show){
             progressBar.show();
         } else {
             progressBar.dismiss();
         }
+    }
+
+    /*
+    Show generic error message in case of unrecoverable error
+     */
+    public void showErrorMessage(){
+        Toast.makeText(context, R.string.generic_error_message, Toast.LENGTH_LONG).show();
+    }
+
+    /*
+    Show custom error message in case of unrecoverable error
+     */
+    public void showErrorMessage(String message){
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }

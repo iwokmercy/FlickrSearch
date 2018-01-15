@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mjexco.flickrsearch.adapters.SearchResultsAdapter;
 import com.example.mjexco.flickrsearch.helpers.FlickrSearchHelper;
@@ -49,19 +48,25 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 //initialise recycler view adapter with search results
                 searchResponse = response;
                 if(response.getPhotos() != null && response.getPhotos().getPhoto() != null){
-                    searchResultsList.setAdapter(new SearchResultsAdapter(getApplicationContext(),
-                            response.getPhotos().getPhoto()));
-                    refineResultsButton.setVisibility(View.VISIBLE);
+                    if(Integer.parseInt(response.getPhotos().getTotal()) > 0){
+                        //there is at least one photo returned for the search tag
+                        searchResultsList.setAdapter(new SearchResultsAdapter(getApplicationContext(),
+                                response.getPhotos().getPhoto()));
+                        refineResultsButton.setVisibility(View.VISIBLE);
+                    } else {
+                        //show no results error
+                        searchHelper.showErrorMessage(getString(R.string.no_results_for_tag_text));
+                    }
                 } else {
                     //show error
-                    showErrorMessage();
+                    searchHelper.showErrorMessage();
                 }
             }
 
             @Override
             public void onErrorResponseReceived(String errorMessage) {
                 //show error message
-                showErrorMessage();
+                searchHelper.showErrorMessage();
             }
 
             @Override
@@ -73,7 +78,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     adapter.notifyDataSetChanged();
                 } else {
                     //no photos in the results match that title
-                    showErrorMessage(getString(R.string.no_results_text));
+                    searchHelper.showErrorMessage(getString(R.string.no_results_text));
                 }
             }
         });
@@ -104,19 +109,5 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             }
         }
-    }
-
-    /*
-    Show generic error message in case of unrecoverable error
-     */
-    private void showErrorMessage(){
-        Toast.makeText(this, R.string.generic_error_message, Toast.LENGTH_LONG).show();
-    }
-
-    /*
-    Show custom error message in case of unrecoverable error
-     */
-    private void showErrorMessage(String message){
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }
